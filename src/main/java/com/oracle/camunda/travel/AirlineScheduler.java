@@ -47,7 +47,10 @@ public class AirlineScheduler {
                 .post(Entity.json(fetchAndLockPayload().toString()));
         
             try {
+
+
                 Response result = response.get();
+                if (result)
                 if (result.getStatus() == 200) {
                     JsonArray entities = (JsonArray) result.readEntity(JsonArray.class);
                     entities.forEach( elem -> {   
