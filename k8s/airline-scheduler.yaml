@@ -1,0 +1,49 @@
+kind: Service
+apiVersion: v1
+metadata:
+    name: airline-manager-service
+    namespace: corona
+    labels:
+        app: airline-manager-service
+        version: v1
+spec:
+    selector:
+        app: airline-manager-service
+    ports:
+        - port: 7501
+          targetPort: 7501
+          name: http
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: airline-manager-service-v1
+    namespace: corona
+    labels:
+        app: airline-manager-service
+        version: v1
+spec:
+    replicas: 1
+    selector:
+       matchLabels:
+          app: airline-manager-service
+          version: v1
+    template:
+        metadata:
+            labels:
+                app: airline-manager-service
+                version: v1
+        spec:
+            containers:
+                - image: skzern/travel-airline:0.0.1
+                  imagePullPolicy: Always
+                  name: airline-manager
+                  ports:
+                      - containerPort: 7501
+                  env:
+                    - name: AIRLINE_TOPIC
+                      value: 'airline'
+                    - name: "CAMUNDA_ORCHESTRATION_ENGINE"
+                      value: http://100.94.22.212/engine-rest
+                    
